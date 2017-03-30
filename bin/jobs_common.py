@@ -20,11 +20,10 @@ def read_known_names():
     return names
 
 def save_known_names(names):
-    f = open(job_names_file(), "w")
-    for name in names:
-        f.write(name)
-        f.write("\n")
-    f.close()
+    with open(job_names_file(), "w") as f:
+        for name in names:
+            f.write(name)
+            f.write("\n")
 
 def add_to_known_names(namespace, name):
     known_names = read_known_names()

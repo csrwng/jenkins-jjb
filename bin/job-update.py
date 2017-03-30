@@ -2,10 +2,7 @@
 
 from __future__ import print_function
 import sys
-import kubernetes.client
-import base64
 import tempfile
-import os
 from subprocess import call
 
 from kubernetes.client.rest import ApiException
@@ -19,8 +16,8 @@ def main(argv):
         process_config(argv[0], argv[1], argv[2])
 
 def process_config(namespace, name, annotation_value=None):
-    if (not annotation_value) or (annotation_value != "true"):
-        print("configmap %s/%s is not applicable to Jenkins" % (namespace, name))
+    if annotation_value != "true":
+        print("configmap {}/{} is not applicable to Jenkins".format(namespace, name))
         return
 
     core_instance = oc_common.connect_to_kube_core()    
@@ -28,20 +25,20 @@ def process_config(namespace, name, annotation_value=None):
     try:
         config_map = core_instance.read_namespaced_config_map(name, namespace)
     except ApiException as e:
-        print("Exception when calling CoreV1Api->read_namespaced_configmap: %s\n" % e)
+        print("Exception when calling CoreV1Api->read_namespaced_configmap: {}\n".format(e))
         exit(1)
 
     if len(config_map.data) != 1:
-        print("Invalid config map %s/%s: more than one data key present\n" % (namespace, name))
+        print("Invalid config map {}/{}: more than one data key present\n".format(namespace, name))
 
-    tempdir = tempfile.mkdtemp()
-    filename = config_map.data.keys()[0]
-    localname = os.path.join(tempdir, filename)
-    jobfile = open(localname, "w")
-    jobfile.write(config_map.data[filename])
-    jobfile.close()
+    if 'job.yml' not in config_map.data:
+        print("Invalid config map {}/{}: no 'job.yml' key present\n".format(namespace, name))
 
-    call(["jenkins-jobs", "update", localname])
+    tmp_job_file = tempfile.mkstemp()
+    with open(tmp_job_file, "w") as jobfile:
+        jobfile.write(config_map.data['job.yml'])
+
+    call(["jenkins-jobs", "update", tmp_job_file])
     jobs_common.add_to_known_names(namespace, name)
 
 if __name__ == "__main__":
