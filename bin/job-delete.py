@@ -13,7 +13,7 @@ def main(argv):
         delete_job(argv[0], argv[1])
 
 def delete_job(namespace, name):
-    call("jenkins-jobs", "delete", name)
+    call(["jenkins-jobs", "delete", name])
     jobs_common.remove_from_known_names(namespace, name)
 
 if __name__ == "__main__":

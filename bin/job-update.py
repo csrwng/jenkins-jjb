@@ -41,7 +41,7 @@ def process_config(namespace, name, annotation_value=None):
     jobfile.write(config_map.data[filename])
     jobfile.close()
 
-    call("jenkins-jobs", "update", localname)
+    call(["jenkins-jobs", "update", localname])
     jobs_common.add_to_known_names(namespace, name)
 
 if __name__ == "__main__":
