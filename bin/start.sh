@@ -6,7 +6,7 @@ if [[ ! -f ~/.config/jenkins_jobs/jenkins_jobs.ini ]]; then
 	cat ~/jenkins_jobs.ini.template | envsubst > ~/.config/jenkins_jobs/jenkins_jobs.ini
 fi
 
-oc observe config-maps configmaps \
+oc observe configmaps \
 	--names=job-list.py  \
     --delete=job-delete.py -a "{ .metadata.annotations['ci\\.openshift\\.io/jenkins-job'] }" \
 	-- job-update.py
