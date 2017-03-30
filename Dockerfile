@@ -19,4 +19,4 @@ ENV JENKINS_SERVICE_URL="http://jenkins" \
 COPY jenkins_jobs.ini.template /home/user/jenkins_jobs.ini.template
 COPY bin/* /home/user/bin/
 
-ENTRYPOINT ["/bin/bash", "-c", "while(true); do date; sleep 30; done"]
+ENTRYPOINT ["/home/user/bin/start.sh"]
