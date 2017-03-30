@@ -14,7 +14,7 @@ def main(argv):
 
 def delete_job(namespace, name):
     call(["jenkins-jobs", "delete", name])
-    jobs_common.remove_from_known_names(namespace, name)
+    jobs_common.delete_from_known_names(namespace, name)
 
 if __name__ == "__main__":
     main(sys.argv[1:])
