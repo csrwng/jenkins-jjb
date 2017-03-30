@@ -1,5 +1,4 @@
 import os
-from jenkinsapi.jenkins import Jenkins 
 import kubernetes.client
 
 def connect_to_kube_core():
