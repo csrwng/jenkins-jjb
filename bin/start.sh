@@ -8,5 +8,5 @@ fi
 
 oc observe configmaps \
 	--names=job-list.py  \
-    --delete=job-delete.py -a "{ .metadata.annotations['ci\\.openshift\\.io/jenkins-job'] }" \
+    --delete=job-delete.py -a "{ .metadata.annotations.ci\.openshift\.io/jenkins-job }" \
 	-- job-update.py
